@@ -1,4 +1,4 @@
-name: Publish to Docker Hub
+name: Test and Publish to Docker Hub
 
 on:
   push:
@@ -6,7 +6,34 @@ on:
       - main
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Build the Docker image
+        run: docker build -t kelvinzer0/udp-relay .
+
+      - name: Run the Docker container in the background
+        run: docker run -d -p 7300:7300 --name udp-relay-server kelvinzer0/udp-relay
+
+      - name: Wait for the container to be ready
+        run: sleep 5
+
+      - name: Run the test script
+        run: python test_relay.py
+
+      - name: Stop and remove the container
+        run: docker stop udp-relay-server && docker rm udp-relay-server
+
   build-and-push:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
