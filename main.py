@@ -1,7 +1,6 @@
 import socket
 import threading
-import asyncio
-import asyncore
+
 from collections import defaultdict
 
 class UDPRelayServer:
