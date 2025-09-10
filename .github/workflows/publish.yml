@@ -17,20 +17,17 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Build the Docker image
-        run: docker build -t kelvinzer0/udp-relay .
+      - name: Run the relay server in the background
+        run: python main.py & echo "SERVER_PID=$!" >> $GITHUB_ENV
 
-      - name: Run the Docker container in the background
-        run: docker run -d -p 7300:7300 --name udp-relay-server kelvinzer0/udp-relay
-
-      - name: Wait for the container to be ready
+      - name: Wait for the server to be ready
         run: sleep 5
 
       - name: Run the test script
         run: python test_relay.py
 
-      - name: Stop and remove the container
-        run: docker stop udp-relay-server && docker rm udp-relay-server
+      - name: Stop the relay server
+        run: kill $SERVER_PID
 
   build-and-push:
     needs: test
