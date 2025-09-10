@@ -2,25 +2,7 @@
 
 This project runs a UDP relay server inside a Docker container. The server listens for TCP connections on port 7300, reads a target address, and relays UDP packets to that target.
 
-## How to Build and Publish to Docker Hub
 
-1.  **Build the Docker image with your username:**
-
-    ```bash
-    docker build -t kelvinzer0/udp-relay .
-    ```
-
-2.  **Log in to Docker Hub:**
-
-    ```bash
-    docker login
-    ```
-
-3.  **Push the image to Docker Hub:**
-
-    ```bash
-    docker push kelvinzer0/udp-relay
-    ```
 
 ## How to Run from Docker Hub
 
