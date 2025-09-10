@@ -21,7 +21,17 @@ jobs:
         run: python main.py & echo "SERVER_PID=$!" >> $GITHUB_ENV
 
       - name: Wait for the server to be ready
-        run: sleep 5
+        run: |
+          for i in {1..10}; do
+            if nc -z 127.0.0.1 7300; then
+              echo "Server is ready."
+              exit 0
+            fi
+            echo "Waiting for server... ($i/10)"
+            sleep 1
+          done
+          echo "Server did not start in time."
+          exit 1
 
       - name: Run the test script
         run: python test_relay.py
