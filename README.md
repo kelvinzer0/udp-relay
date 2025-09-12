@@ -87,3 +87,19 @@ if __name__ == "__main__":
     ```bash
     python client_example.py
     ```
+
+Got it, here’s the **English version** you can drop directly into your `README.md`:
+
+---
+
+### Public Relay List
+
+If you are running a **UDP Relay Docker** instance and would like to share your relay with the community, please **fork this repository**, edit the table below by adding your relay information, and submit a **pull request**. I’ll be happy to review and approve it.
+
+| No | Relay IP / Host         | Port TCP | Date Start Active |
+| -- | ----------------------- | -------- | ----------------- |
+| 1  | `udp-relay.hobihaus.space` | 7300     | 2025-09-12        |
+---
+
+Do you also want me to prepare a **CONTRIBUTING.md template** in English with clear steps (fork → edit → PR)? That way contributors won’t have to guess the process.
+
