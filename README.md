@@ -101,5 +101,3 @@ If you are running a **UDP Relay Docker** instance and would like to share your 
 | 1  | `udp-relay.hobihaus.space` | 7300     | 2025-09-12        |
 ---
 
-Do you also want me to prepare a **CONTRIBUTING.md template** in English with clear steps (fork → edit → PR)? That way contributors won’t have to guess the process.
-
