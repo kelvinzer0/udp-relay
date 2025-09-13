@@ -88,10 +88,6 @@ if __name__ == "__main__":
     python client_example.py
     ```
 
-Got it, here’s the **English version** you can drop directly into your `README.md`:
-
----
-
 ### Public Relay List
 
 If you are running a **UDP Relay Docker** instance and would like to share your relay with the community, please **fork this repository**, edit the table below by adding your relay information, and submit a **pull request**. I’ll be happy to review and approve it.
