@@ -95,6 +95,6 @@ If you are running a **TCP/UDP Relay Docker** instance and would like to share y
 
 | No | Relay IP / Host         | Port TCP | Date Start Active |
 | -- | ----------------------- | -------- | ----------------- |
-| 1  | `udp-relay.hobihaus.space` | 7300     | 2025-09-12        |
+| 1  | `udp-relay.hobihaus.space` | 80     | 2025-09-12        |
 ---
 
