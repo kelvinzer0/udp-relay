@@ -2,19 +2,32 @@
 
 This project runs a TCP/UDP relay server. The server listens for TCP connections on a specified port, reads a target address and protocol, and relays TCP or UDP packets to that target.
 
-## How to Run
+## How to Run with Docker (Recommended)
 
-You can run the relay server either directly from the source code or using Docker.
+The easiest way to run the relay server is using the pre-built Docker image from Docker Hub:
 
-### Running from Source
+```bash
+docker pull kelvinzer0/udp-relay
+docker run -p <host_port>:7300 --name udp-relay-server kelvinzer0/udp-relay
+```
+
+*   `<host_port>`: The port on your local machine to expose the relay service.
+
+Example:
+```bash
+# Map port 7300 on the host to port 7300 in the container
+docker run -p 7300:7300 --name udp-relay-server kelvinzer0/udp-relay
+
+# Map port 8080 on the host to port 7300 in the container
+docker run -p 8080:7300 --name udp-relay-server kelvinzer0/udp-relay
+```
+
+### Running from Source (Alternative)
 
 1.  **Prerequisites:**
     *   Python 3.6+
 
-2.  **Installation:**
-    *   No external libraries are required.
-
-3.  **Running the server:**
+2.  **Running the server:**
 
     ```bash
     python main.py [--port <port_number>]
@@ -30,32 +43,6 @@ You can run the relay server either directly from the source code or using Docke
 
     # Run on port 8080
     python main.py --port 8080
-
-    # Run on port 80 (requires sudo)
-    sudo python main.py --port 80
-    ```
-
-### Running with Docker
-
-1.  **Build the Docker image:**
-
-    ```bash
-    docker build -t udp-relay .
-    ```
-
-2.  **Run the Docker container:**
-
-    ```bash
-    docker run -p <host_port>:<container_port> --name udp-relay-server udp-relay
-    ```
-    
-    *   `<host_port>`: The port on your local machine.
-    *   `<container_port>`: The port the server is listening on inside the container (e.g., 7300).
-
-    Example:
-    ```bash
-    # Map port 7300 on the host to port 7300 in the container
-    docker run -p 7300:7300 --name udp-relay-server udp-relay
     ```
 
 ## Example Usage
@@ -122,7 +109,7 @@ if __name__ == "__main__":
 
 ### How to run the example:
 
-1.  Make sure the relay server is running (either from source or Docker).
+1.  Make sure the relay server is running (either from Docker or source).
 2.  Save the code above as `client_example.py`.
 3.  Run the client:
 
@@ -141,10 +128,9 @@ if __name__ == "__main__":
 
 ### Public Relay List
 
-If you are running a **TCP/UDP Relay** instance and would like to share your relay with the community, please **fork this repository**, edit the table below by adding your relay information, and submit a **pull request**. I’ll be happy to review and approve it.
+If you are running a **TCP/UDP Relay** instance and would like to share your relay with the community, please **fork this repository**, edit the table below by adding your relay information, and submit a **pull request**. I'll be happy to review and approve it.
 
 | No | Relay IP / Host         | Port TCP | Date Start Active |
 | -- | ----------------------- | -------- | ----------------- |
 | 1  | `udp-relay.hobihaus.space` | 80     | 2025-09-12        |
 ---
-
