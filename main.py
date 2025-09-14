@@ -1,5 +1,6 @@
 import socket
 import threading
+import argparse
 
 class RelayServer:
     def __init__(self, host='0.0.0.0', port=7300):
@@ -12,7 +13,12 @@ class RelayServer:
         # TCP server to receive connections from workers
         tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         tcp_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        tcp_server.bind((self.host, self.port))
+        try:
+            tcp_server.bind((self.host, self.port))
+        except OSError as e:
+            print(f"Error binding to port {self.port}: {e}")
+            print("Ports below 1024 may require root privileges (sudo).")
+            return
         tcp_server.listen(5)
         
         print(f"Relay Server listening on {self.host}:{self.port}")
@@ -130,5 +136,9 @@ class RelayServer:
             del self.tcp_sockets[key]
 
 if __name__ == "__main__":
-    server = RelayServer()
+    parser = argparse.ArgumentParser(description="TCP/UDP Relay Server")
+    parser.add_argument('--port', type=int, default=7300, help='Port to listen on. Ports below 1024 may require root privileges.')
+    args = parser.parse_args()
+
+    server = RelayServer(port=args.port)
     server.start()

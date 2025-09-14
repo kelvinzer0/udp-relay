@@ -1,33 +1,72 @@
 # TCP/UDP Relay Docker
 
-This project runs a TCP/UDP relay server inside a Docker container. The server listens for TCP connections on port 7300, reads a target address and protocol, and relays TCP or UDP packets to that target.
+This project runs a TCP/UDP relay server. The server listens for TCP connections on a specified port, reads a target address and protocol, and relays TCP or UDP packets to that target.
 
-## How to Run from Docker Hub
+## How to Run
 
-Once published, you or anyone else can run the image directly from Docker Hub.
+You can run the relay server either directly from the source code or using Docker.
 
-1.  **Pull the image from Docker Hub:**
+### Running from Source
+
+1.  **Prerequisites:**
+    *   Python 3.6+
+
+2.  **Installation:**
+    *   No external libraries are required.
+
+3.  **Running the server:**
 
     ```bash
-    docker pull kelvinzer0/udp-relay
+    python main.py [--port <port_number>]
+    ```
+
+    *   `--port <port_number>`: (Optional) The port for the server to listen on. Defaults to `7300`.
+    *   **Note:** Ports below 1024 require root privileges (run with `sudo`).
+
+    Example:
+    ```bash
+    # Run on the default port 7300
+    python main.py
+
+    # Run on port 8080
+    python main.py --port 8080
+
+    # Run on port 80 (requires sudo)
+    sudo python main.py --port 80
+    ```
+
+### Running with Docker
+
+1.  **Build the Docker image:**
+
+    ```bash
+    docker build -t udp-relay .
     ```
 
 2.  **Run the Docker container:**
 
     ```bash
-    docker run -p 7300:7300 --name udp-relay-server kelvinzer0/udp-relay
+    docker run -p <host_port>:<container_port> --name udp-relay-server udp-relay
     ```
+    
+    *   `<host_port>`: The port on your local machine.
+    *   `<container_port>`: The port the server is listening on inside the container (e.g., 7300).
 
-The server will be listening on TCP port 7300 on your local machine.
+    Example:
+    ```bash
+    # Map port 7300 on the host to port 7300 in the container
+    docker run -p 7300:7300 --name udp-relay-server udp-relay
+    ```
 
 ## Example Usage
 
 This server expects data in a specific format over a TCP connection: `protocol:target_ip:target_port|actual_data`.
 
-Here is a simple Python client example that sends a message to a target server through the relay. You can save this code as `client_example.py`.
+Here is a simple Python client example that sends a message to a target server through the relay.
 
 ```python
 import socket
+import argparse
 
 def send_via_relay(relay_host, relay_port, protocol, target_ip, target_port, data):
     """
@@ -60,16 +99,17 @@ def send_via_relay(relay_host, relay_port, protocol, target_ip, target_port, dat
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    # Relay server details
-    RELAY_HOST = '127.0.0.1'
-    RELAY_PORT = 7300
+    parser = argparse.ArgumentParser(description="TCP/UDP Relay Client Example")
+    parser.add_argument('--relay-host', type=str, default='127.0.0.1', help='Relay server host')
+    parser.add_argument('--relay-port', type=int, default=7300, help='Relay server port')
+    args = parser.parse_args()
 
     # --- UDP Example ---
     print("--- Sending UDP Packet ---")
     UDP_TARGET_IP = '1.1.1.1'  # Example public DNS
     UDP_TARGET_PORT = 53
     udp_message = b'\x12\x34\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x07example\x03com\x00\x00\x01\x00\x01' # DNS query for example.com
-    send_via_relay(RELAY_HOST, RELAY_PORT, 'udp', UDP_TARGET_IP, UDP_TARGET_PORT, udp_message)
+    send_via_relay(args.relay_host, args.relay_port, 'udp', UDP_TARGET_IP, UDP_TARGET_PORT, udp_message)
     print("\n" + "-"*26 + "\n")
 
     # --- TCP Example ---
@@ -77,21 +117,31 @@ if __name__ == "__main__":
     TCP_TARGET_IP = '93.184.216.34'  # Example IP for example.com
     TCP_TARGET_PORT = 80
     tcp_message = "GET / HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n"
-    send_via_relay(RELAY_HOST, RELAY_PORT, 'tcp', TCP_TARGET_IP, TCP_TARGET_PORT, tcp_message)
+    send_via_relay(args.relay_host, args.relay_port, 'tcp', TCP_TARGET_IP, TCP_TARGET_PORT, tcp_message)
 ```
 
 ### How to run the example:
 
-1.  Make sure the `udp-relay` Docker container is running.
+1.  Make sure the relay server is running (either from source or Docker).
 2.  Save the code above as `client_example.py`.
 3.  Run the client:
+
     ```bash
+    python client_example.py [--relay-host <host>] [--relay-port <port>]
+    ```
+
+    Example:
+    ```bash
+    # Connect to the relay on localhost:7300 (default)
     python client_example.py
+
+    # Connect to the relay on a different host and port
+    python client_example.py --relay-host my-relay.example.com --relay-port 8080
     ```
 
 ### Public Relay List
 
-If you are running a **TCP/UDP Relay Docker** instance and would like to share your relay with the community, please **fork this repository**, edit the table below by adding your relay information, and submit a **pull request**. I’ll be happy to review and approve it.
+If you are running a **TCP/UDP Relay** instance and would like to share your relay with the community, please **fork this repository**, edit the table below by adding your relay information, and submit a **pull request**. I’ll be happy to review and approve it.
 
 | No | Relay IP / Host         | Port TCP | Date Start Active |
 | -- | ----------------------- | -------- | ----------------- |

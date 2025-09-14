@@ -1,4 +1,5 @@
 import socket
+import argparse
 
 def send_via_relay(relay_host, relay_port, protocol, target_ip, target_port, data):
     """
@@ -31,16 +32,17 @@ def send_via_relay(relay_host, relay_port, protocol, target_ip, target_port, dat
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    # Relay server details
-    RELAY_HOST = '127.0.0.1'
-    RELAY_PORT = 7300
+    parser = argparse.ArgumentParser(description="TCP/UDP Relay Client Example")
+    parser.add_argument('--relay-host', type=str, default='127.0.0.1', help='Relay server host')
+    parser.add_argument('--relay-port', type=int, default=7300, help='Relay server port')
+    args = parser.parse_args()
 
     # --- UDP Example ---
     print("--- Sending UDP Packet ---")
     UDP_TARGET_IP = '1.1.1.1'  # Example public DNS
     UDP_TARGET_PORT = 53
     udp_message = b'\x12\x34\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x07example\x03com\x00\x00\x01\x00\x01' # DNS query for example.com
-    send_via_relay(RELAY_HOST, RELAY_PORT, 'udp', UDP_TARGET_IP, UDP_TARGET_PORT, udp_message)
+    send_via_relay(args.relay_host, args.relay_port, 'udp', UDP_TARGET_IP, UDP_TARGET_PORT, udp_message)
     print("\n" + "-"*26 + "\n")
 
     # --- TCP Example ---
@@ -48,4 +50,4 @@ if __name__ == "__main__":
     TCP_TARGET_IP = '93.184.216.34'  # Example IP for example.com
     TCP_TARGET_PORT = 80
     tcp_message = "GET / HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n"
-    send_via_relay(RELAY_HOST, RELAY_PORT, 'tcp', TCP_TARGET_IP, TCP_TARGET_PORT, tcp_message)
+    send_via_relay(args.relay_host, args.relay_port, 'tcp', TCP_TARGET_IP, TCP_TARGET_PORT, tcp_message)
